@@ -5,11 +5,19 @@ import unittest
 import operator
 import warnings
 
-class TestSeasonsArgument(unittest.TestCase):
+class TestEgyBest(unittest.TestCase):
+
     def setUp(self):
         warnings.simplefilter('ignore', category=ResourceWarning)
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        self.m = imp.load_source('egybest-dl', '{dir_path}{sep}..{sep}egybest-dl{sep}egybest-dl'.format(dir_path=dir_path, sep=os.sep))
+        self.m = imp.load_source('egybest-dl', '{dir_path}{sep}egybest-dl{sep}egybest-dl'.format(dir_path=dir_path, sep=os.sep))
+    
+    def test_browser(self):
+        try:
+            browser = self.m.init_browser('chromedriver')
+            browser.quit()
+        except:
+            self.fail('Method init_browser() failed!')
 
     def test_seasons(self):
         self.assertListEqual(

@@ -92,7 +92,7 @@ or copy them into [Internet Download Manager](https://www.internetdownloadmanage
 -Q, --quality [1080|720|480|360|240] Quality of output video.  [default: 720]
 -o, --output-file FILENAME           Save download URIs to FILENAME.
 -d, --dest TEXT                      Destination path.
---executable-path FILE               Path to chromedriver executable.
+-x, --executable-path FILE           Path to chromedriver executable.
 --quiet                              Activate quiet mode.
 --version                            Show the version and exit.
 --help                               Show this message and exit.
