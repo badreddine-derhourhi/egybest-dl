@@ -89,12 +89,13 @@ def close_ads(browser):
 @click.option('--output-file', '-o', type=click.File(mode='w'), help='Save download URIs to FILENAME.')
 @click.option('--dest', '-d', default=expanduser("~")+os.sep, help='Destination path.')
 @click.option('--executable-path', '-x', type=click.Path(exists=True, file_okay=True, dir_okay=False), help='Path to chromedriver executable.')
+@click.option('--base-url', '-u', default=URL, help='Use a different base URL.')
 @click.option('--quiet', default=False, is_flag=True, help='Activate quiet mode.')
 @click.argument('search', required=False, nargs=1)
 @click.argument('seasons', nargs=-1, callback=validate_seasons)
 @click.version_option(__version__, prog_name='egybest-dl')
 
-def main(search, quality, seasons, output_file, dest, executable_path, quiet):
+def main(search, quality, seasons, output_file, dest, executable_path, base_url, quiet):
     """
     Downloads any Movie or TV Series from EgyBest.
 
@@ -104,6 +105,9 @@ def main(search, quality, seasons, output_file, dest, executable_path, quiet):
       SEARCH\tName of the Movie or TV Series.
       SEASONS\t[season[:episode[,episode[,...]]]]...
     """
+
+    if not base_url.startswith('http'):
+        base_url = 'http://'+base_url
 
     if not executable_path:
         executable_path = 'chromedriver'
@@ -138,7 +142,7 @@ def main(search, quality, seasons, output_file, dest, executable_path, quiet):
     sess = requests.Session()
     while True:
         if not quiet: click.echo('Searching for results...')
-        r = sess.get(URL+'/autoComplete.php?q={}'.format(search), headers=headers)
+        r = sess.get(base_url+'/autoComplete.php?q={}'.format(search), headers=headers)
         results = r.json()
         if not results.get(search):
             click.echo('No results !')
@@ -162,7 +166,7 @@ def main(search, quality, seasons, output_file, dest, executable_path, quiet):
     #To emulate this, we'll click on the search field as if we were looking for
     #something, wait 3 secs and close the ad.
     if not quiet: click.echo('opening a popup ad for 3 secs...')
-    browser.get(URL + '/some404page') #load it faster...
+    browser.get(base_url + '/some404page') #load it faster...
     try:
         elem = browser.find_element_by_xpath('//input[contains(@class, "autoComplete")]')
         elem.click()
@@ -177,7 +181,7 @@ def main(search, quality, seasons, output_file, dest, executable_path, quiet):
     
     if not quiet: click.echo('Requesting pages links...')
     if chosen_result['u'].lower().startswith('movie'):
-        page_links.append(URL+'/{}/'.format(chosen_result['u']))
+        page_links.append(base_url+'/{}/'.format(chosen_result['u']))
     else:
         if not seasons:
             try:
@@ -187,7 +191,7 @@ def main(search, quality, seasons, output_file, dest, executable_path, quiet):
                 sys.exit()
 
         l = []
-        r = sess.get(URL+'/{}/'.format(chosen_result['u']), headers=headers)
+        r = sess.get(base_url+'/{}/'.format(chosen_result['u']), headers=headers)
         soup = BeautifulSoup(r.text, 'html.parser')
         nb = len(soup.select('a[href*="/season/"]'))
         if not quiet: click.echo('There are {} seasons'.format(nb))
@@ -250,7 +254,7 @@ def main(search, quality, seasons, output_file, dest, executable_path, quiet):
             browser.get(page_link)
             if not quiet: click.echo('Accessing download page')
             elem = browser.find_element_by_xpath('//table[contains(@class, "dls_table")]//tr[td//text()[contains(., "{}p")]]//a[1]'.format(quality))
-            browser.get(URL+elem.get_attribute('data-url'))
+            browser.get(base_url+elem.get_attribute('data-url'))
         except TimeoutException:
             time.sleep(5)
             continue
