@@ -20,7 +20,7 @@ from selenium.webdriver.common.by import By
 __author__ = 'Yassine Addi'
 __copyright__ = 'Copyright (C) 2020 Yassine Addi'
 __license__ = 'MIT'
-__version__ = '2021.11.18'
+__version__ = '2021.11.21'
 
 AVAILABLE_QUALITIES = ['1080', '720', '480', '360', '240']
 URL = 'https://lake.egybest.life'
