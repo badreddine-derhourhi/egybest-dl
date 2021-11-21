@@ -162,15 +162,13 @@ def main(search, quality, seasons, output_file, dest, executable_path, base_url,
     else:
         click.echo('{} : {}'.format(results[search][0]['u'].split('/')[0].title(), results[search][0]['t']))
 
-    #To fix a redirect bug, we're obliged to invoke an popup ad for a couple of secs.
-    #To emulate this, we'll click on the search field as if we were looking for
-    #something, wait 3 secs and close the ad.
-    if not quiet: click.echo('opening a popup ad for 3 secs...')
+    # Purposefully open a popup
+    if not quiet: click.echo('Ad wait (5 secs)...')
     browser.get(base_url + '/some404page') #load it faster...
     try:
         elem = browser.find_element_by_xpath('//input[contains(@class, "autoComplete")]')
         elem.click()
-        time.sleep(3)
+        time.sleep(5)
         close_ads(browser)
     except:
         #If it fails, well, fingers crossed.
