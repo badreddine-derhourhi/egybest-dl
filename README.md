@@ -93,6 +93,7 @@ or copy them into [Internet Download Manager](https://www.internetdownloadmanage
 -o, --output-file FILENAME           Save download URIs to FILENAME.
 -d, --dest TEXT                      Destination path.
 -x, --executable-path FILE           Path to chromedriver executable.
+-u, --base-url TEXT                  Use a different base URL.
 --quiet                              Activate quiet mode.
 --version                            Show the version and exit.
 --help                               Show this message and exit.
