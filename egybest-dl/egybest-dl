@@ -301,7 +301,7 @@ def main(search, quality, seasons, output_file, dest, executable_path, base_url,
             if c.lower()=='y':
                 continue
         else:
-            click.echo('{} --> added'.format(extracted_links[-1].split('/')[-1]))
+            click.echo('{} --> added'.format(browser.find_element_by_xpath('//div[@class="mainbody"]//h2').text))
         
         cur+=1
     
